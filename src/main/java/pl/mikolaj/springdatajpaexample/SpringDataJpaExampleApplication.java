@@ -1,5 +1,6 @@
 package pl.mikolaj.springdatajpaexample;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -12,18 +13,22 @@ import pl.mikolaj.springdatajpaexample.insurance.ClientRepository;
 import pl.mikolaj.springdatajpaexample.insurance.InsuranceRepository;
 import pl.mikolaj.springdatajpaexample.insurance.model.Client;
 import pl.mikolaj.springdatajpaexample.insurance.model.Offer;
+import pl.mikolaj.springdatajpaexample.offer.OfferRepository;
 
 @SpringBootApplication
 public class SpringDataJpaExampleApplication implements CommandLineRunner {
 
 	private final InsuranceRepository insuranceRepository;
 	private final ClientRepository clientRepository;
+	private final OfferRepository offerRepository;
 
 	@Autowired
 	public SpringDataJpaExampleApplication(InsuranceRepository insuranceRepository,
-										   ClientRepository clientRepository) {
+										   ClientRepository clientRepository,
+										   OfferRepository offerRepository) {
 		this.insuranceRepository = insuranceRepository;
 		this.clientRepository = clientRepository;
+		this.offerRepository = offerRepository;
 	}
 
 	public static void main(String[] args) {
@@ -31,13 +36,20 @@ public class SpringDataJpaExampleApplication implements CommandLineRunner {
 	}
 
 	@Override
-	@Transactional
-	public void run(String... args) throws Exception {
-		Client cl = new Client();
-		cl.setFirstName("Miki");
-		clientRepository.save(cl);
+	@Transactional(rollbackFor = Exception.class)
+	public void run(String... args) {
+		Client client = new Client();
+		client.setFirstName("Miki");
+		clientRepository.save(client);
 
-		System.out.println(findClientOffers());
+		Offer offer = new Offer();
+		offer.setName("Super stuff");
+		offerRepository.save(offer);
+
+		client.getOffers().add(offer);
+		clientRepository.save(client);
+
+//		System.out.println(findClientOffers());
 	}
 
 	@Transactional

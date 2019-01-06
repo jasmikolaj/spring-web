@@ -1,6 +1,7 @@
 package pl.mikolaj.springdatajpaexample.insurance.model;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,7 +42,7 @@ public class Client {
 			joinColumns = {@JoinColumn(name = "client_id")},
 			inverseJoinColumns = {@JoinColumn(name = "offer_id")}
 	)
-	private Set<Offer> offers;
+	private Set<Offer> offers = new HashSet<>();
 
 	public Client(String firstName,
 				  String lastName,
