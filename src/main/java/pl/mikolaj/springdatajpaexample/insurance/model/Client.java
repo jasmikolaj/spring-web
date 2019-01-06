@@ -34,7 +34,7 @@ public class Client {
 	private Address address;
 
 	@OneToMany(mappedBy = "client")
-	private Set<Insurance> insurance;
+	private Set<Insurance> insurance = new HashSet<>();
 
 	@ManyToMany
 	@JoinTable(
